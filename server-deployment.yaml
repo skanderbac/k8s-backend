@@ -1,0 +1,105 @@
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+spec:
+  selector:
+    matchLabels:
+      app: mern-stack-app-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mern-stack-app-server
+    spec:
+      containers:
+        - name: mongo
+          image: mongo:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: data
+              mountPath: /data
+              readOnly: false
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mongo-data
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongo-data
+  labels:
+    app: mern-stack-app-server
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-service
+spec:
+  selector:
+    app: mongodb
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mern-stack-app-server
+spec:
+  selector:
+    matchLabels:
+      app: mern-stack-app-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mern-stack-app-server
+    spec:
+      containers:
+        - name: mern-stack-app-server
+          image: mern-stack-app-server:1.0.0
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3010
+          volumeMounts:
+            - name: data
+              mountPath: /data
+              readOnly: false
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mongo-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mern-stack-app-server-service
+spec:
+  selector:
+    app: mern-stack-app-server
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+---
+

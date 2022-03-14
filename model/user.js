@@ -14,7 +14,7 @@ var User=new Schema({
         type:Number,
     },
     Country: {
-        type:Number,
+        type:String,
     },
     Email: {
         type:String,

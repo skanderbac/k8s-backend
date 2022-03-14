@@ -16,11 +16,12 @@ UserController.addUser=async(req,res,next)=>{
         }
     );
     try{
+        console.log(req.body);
         const savedUser=await user.save();
-        res.status(200).send('added');
+        res.send("user added");
+
     }catch(err){
-        next(err);
-        res.status(500).send(err);
+        res.send(err);
 
     }
 };
@@ -28,7 +29,7 @@ UserController.addUser=async(req,res,next)=>{
 UserController.Users=async(req,res,next)=>{
     console.log(req.params);
     const user=await User.find({})
-        .then(user=>{res.status(200).json(user);console.log(user)})
+        .then(user=>{res.status(200).json(user);})
         .catch(error=>{res.status(400).json(error);console.log(error)})
 
 
