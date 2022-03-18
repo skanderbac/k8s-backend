@@ -13,7 +13,15 @@ app.listen(5000);
 app.use(cors());
 mongoose.connect(config.mongo.uri,
     {useNewUrlParser:true,useUnifiedTopology:true,useFindAndModify: false},
-    ()=>console.log("connected to database"));
+    (err)=>{
+    if(err){
+      console.log(err)
+    }
+    else{
+      console.log("connected to database")
+    }
+
+    });
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
