@@ -1,7 +1,7 @@
 {
 
     "mongo": {
-      "uri": "mongodb://mongo:27017/kubernetes-app"
+      "uri": "mongodb://mongodb-service:27017/kubernetes-app"
     }
  
  
